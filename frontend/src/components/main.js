@@ -9,14 +9,13 @@ import { useEffect } from "react";
 function Main(){
     const [products, setProducts] = useState([]);
     useEffect(() => {
-        async function getdata(){
+        function getdata(){
             const res = axios.get('http://localhost:4000/products');
             return res;
         }
-        getdata().then((res) => setProducts(res));
+        getdata().then((res) => setProducts(res.data));
         getdata().catch((err) => console.log(err));
     }, []);
-    console.log(products);
     return(
         <div>
             <Header />
