@@ -5,7 +5,6 @@ import { useEffect } from "react";
 function ListProducts({products}){
     console.log(products);
     return (
-        <div className="grid">
           <article className="card product-item">
             <header className="card__header">
               <h1 className="product__title">{products.title}</h1>
@@ -21,7 +20,6 @@ function ListProducts({products}){
               <button className="btn">Add to Cart</button>
             </div>
           </article>
-        </div>
       );
 }
 
@@ -40,7 +38,7 @@ function RenderShop() {
     {
       products.map((product, index) => {
         return(
-          <div key={index}>
+          <div className="grid" key={index}>
         <ListProducts products={product} />
         </div>
         );
