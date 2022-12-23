@@ -35,7 +35,7 @@ app.get('/products', (req, res, next) => {
 app.post('/products', (req, res, next) => {    
     getProductsFromFile( (products) => { 
         let newProduct = {
-            name: req.body.name,
+            title: req.body.title,
             imageUrl: req.body.imageUrl,
             description: req.body.description,
             price: req.body.price,

@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from 'axios';
+import { useEffect } from "react";
 
-function ListProducts(products){
+function ListProducts({products}){
     console.log(products);
     return (
         <div className="grid">
@@ -23,21 +25,30 @@ function ListProducts(products){
       );
 }
 
-function RenderShop(props) {
-  const { products } = props;
-
-  if(products !== null || products !== undefined ) {
-    return(<div>
-        {<ListProducts products={products} />}
-    </div>);
-  }
-  else{
-    return(
-    <div>
-        Page not undefined
-    </div>
-    );
-  }
+function RenderShop() {
+  const [products, setProducts] = useState([]);
+    useEffect(() => {
+        async function getdata(){
+            const res = axios.get('http://localhost:4000/products');
+            return res;
+        }
+        getdata().then((res) => setProducts(res.data));
+        getdata().catch((err) => console.log(err));
+    },[]);
+ return(
+  <div>
+    {
+      products.map((product, index) => {
+        return(
+          <div key={index}>
+        <ListProducts products={product} />
+        </div>
+        );
+      })
+    }
+    
+  </div>
+ )
 }
 
 export default RenderShop;
