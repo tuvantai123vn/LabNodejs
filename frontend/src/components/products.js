@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useEffect } from "react";
 
 function ListProducts({products}){
-    console.log(products);
     return (
           <article className="card product-item">
             <header className="card__header">

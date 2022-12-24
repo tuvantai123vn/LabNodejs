@@ -25,6 +25,7 @@ const submitForm = (value) => {
       })
         .then((response) => response.json())
         .then((newProduct) => {
+          window.location = 'http://localhost:3000';
           console.log('Success:', newProduct);
         })
         .catch((error) => {

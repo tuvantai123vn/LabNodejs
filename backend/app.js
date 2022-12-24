@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 app.use(cors());
 
-
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
@@ -48,11 +47,10 @@ app.post('/add-products', (req, res, next) => {
             path.join(
                 path.dirname(process.mainModule.filename), 
                 'datas', 
-                'products.json'), JSON.stringify(list) , 'utf8' , (err) => {
-            console.log(err);
+                'products.json'), JSON.stringify(list) , 'utf8' , () => {
+            res.json(list);
         })
     });
-    
 });
  
 
