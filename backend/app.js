@@ -1,21 +1,24 @@
-const express = require('express');
-
-const app = express();
-const defaults = require('./routes/defaults');
-const users = require('./routes/users');
 const cors = require('cors');
+const express = require("express");
+const app = express();
+const path = require("path");
 
-
-app.use(express.urlencoded({extended: false}));
-app.use(defaults);
-app.use(users);
-app.use( (req, res, next) => {
-    res.status(404).send('<h1>Page not found</h1>')
-})
 
 
 app.use(cors());
 
- app.listen(4000, function () {
-  console.log('CORS-enabled web server listening on port 4000')
-});
+const adminRoutes = require("./routes/product");
+const shopRouter = require("./routes/defaults");
+
+const errorController = require('./controllers/err');
+app.set('views', 'views');
+app.use(express.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/admin", adminRoutes);
+app.use(shopRouter);
+
+app.use(errorController.get404);
+
+
+app.listen(4000);
