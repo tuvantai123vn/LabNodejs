@@ -29,10 +29,12 @@ const getProductsFromFile = (cb) => {
 app.get('/products', (req, res, next) => {
     getProductsFromFile( (products) => { 
         res.json(products);
+        console.log(products);
     });
+    
  });
 
-app.post('/products', (req, res, next) => {    
+app.post('/add-products', (req, res, next) => {    
     getProductsFromFile( (products) => { 
         let newProduct = {
             title: req.body.title,

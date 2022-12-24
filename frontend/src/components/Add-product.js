@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 
-
-
 const Add_product = () => {
-    const {title, setTitle} = useState('');
-const {imageUrl, setImageUrl} = useState('');
-const {price, setPrice} = useState('');
-const {description, setDescription} = useState('');
+    const [title, setTitle] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
+    const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
 
 
 const submitForm = (value) => {
@@ -17,8 +15,22 @@ const submitForm = (value) => {
         price,
         description
     }
-    console.log(newProduct);
-}
+      fetch('http://localhost:4000/add-products', {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct),
+        mode: 'cors'
+      })
+        .then((response) => response.json())
+        .then((newProduct) => {
+          console.log('Success:', newProduct);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
     return(
         <div>
             <form className="product-form" onSubmit={submitForm}>

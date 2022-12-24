@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {Route, Routes } from 'react-router-dom';
 import RenderShop from "./products";
 import Header from "./navBar";
@@ -11,7 +11,7 @@ function Main(){
             <Header />
             <Routes>
                 <Route path='/' element={<RenderShop/>}/>
-                <Route exact path='/add-product' element={<Add_product/>} />
+                <Route path='/add-product' element={<Add_product/>} />
             </Routes>
         </div>
     );
