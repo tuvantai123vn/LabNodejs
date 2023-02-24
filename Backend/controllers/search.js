@@ -1,42 +1,38 @@
 const Hotel = require("../models/Hotel");
 const Transaction = require("../models/Transaction");
-const Room = require('../models/Room');
+const Room = require("../models/Room");
 
+async function getBookedRoomId(startDate, endDate) {
+  return Transaction.distinct("hotel", {
+    datestart: { $lt: new Date(endDate) },
+    dateEnd: { $gt: new Date(startDate) },
+    status: "confirmed",
+  });
+}
+async function getBooked(hotelrong) {
+  const count = 0;
+  console.log(count);
+    for(let i =0; i < hotelrong.length; i++){
+      const hotelr = await hotelrong.findById({rooms: [i]});
+      count += hotelrong.rooms.length;
+      return count;
+    }
+}
 exports.search = async (req, res, next) => {
-    const startDate = req.param.date.startDate;
-    const endDate = req.param.date.endDate;
-    const Numberroom = req.param.room;
-    const destination = req.param.destination;
+  const startDate = req.body.dateStart;
+  const endDate = req.body.dateEnd;
+  const desidRooms = req.body.room || 0;
+  const destination = req.body.destination;
 
-  try {
+  const hotelrong = await Hotel.find({
+    _id: { $nin: getBookedRoomId(startDate, endDate)},
+})
+  const availableRoomIds = await Hotel.find({
+    city: destination,
+    rooms: {$elemMatch:  {$gte: desidRooms},
+    _id:  {$nin: getBookedRoomId(startDate, endDate)}}
+  });;
+  
 
-    const availableRooms = await Room.find({
-        _id: getroom(startDate, endDate, destination),
-        roomNumbers: 
-        
-    })
-    await function getroom (startDate, endDate, destination){ Hotel.distinct('rooms',{
-        rooms: getRoomId(startDate, endDate),
-        city: destination
-    })}
-
-    await function getRoomId(startDate, endDate){
-        return Transaction.distinct('_id', {
-        _id: {$nin: getBookedRoomId(startDate, endDate)},
-        })
-    }
-
-    await function getBookedRoomId(startDate, endDate){
-        return Transaction.distinct('room', {
-            datestart: {$lt: new Date(endDate)}, 
-            dateEnd: {$gt: new Date(startDate)},
-            status: "confirmed"
-        })
-    }
-
-
-    return res.status(200).json(availableRooms);
-  } catch (err) {
-    next(err);
-  }
+  return res.status(200).send({"xx": availableRoomIds});
 };

@@ -22,4 +22,5 @@ const Rooms = new Schema({
         type: Number
     }],
 })
+
 module.exports = mongoose.model('Rooms', Rooms)

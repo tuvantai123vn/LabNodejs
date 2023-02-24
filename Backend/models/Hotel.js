@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const Rooms = require('../models/Room')
 const Hotel = new Schema({
     name: {
         type: String,
@@ -40,7 +40,8 @@ const Hotel = new Schema({
         required: true
     },
     rooms : {
-        type: [String],
+        type: Array,
+        ref:'Rooms',
         required: true
     },
 })

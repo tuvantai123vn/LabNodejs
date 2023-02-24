@@ -47,7 +47,6 @@ const Hotel = () => {
     }
     fetchData();
   });
-  console.log(hotelDetail);
 
   return (
     <div>
