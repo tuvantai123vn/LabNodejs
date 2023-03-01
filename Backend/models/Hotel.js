@@ -39,10 +39,12 @@ const Hotel = new Schema({
         type: Boolean,
         required: true
     },
-    rooms : {
-        type: Array,
-        ref:'Rooms',
-        required: true
-    },
+    rooms : [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Rooms',
+
+        }
+    ]
 })
 module.exports = mongoose.model('Hotel', Hotel)

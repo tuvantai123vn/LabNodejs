@@ -1,6 +1,7 @@
 const Hotel = require("../models/Hotel");
 const Transaction = require("../models/Transaction");
 const Room = require("../models/Room");
+const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.search = async (req, res, next) => {
   const startDate = req.body.dateStart;
@@ -29,14 +30,18 @@ exports.search = async (req, res, next) => {
       });
     }
     const a = await getRoomsId(startDate, endDate, destination, adult);
-    const b = await HotelSearch()
-    async function HotelSearch(a) {
-      a = await getRoomsId(startDate, endDate, destination, adult);
-      for(let i = 0; i < a.length; i++ ){
-        console.log("DL", a[1]);
-      }
-    }
-    return res.status(200).send({ xx: a });
+
+    const maxPeople = 2;
+
+    Hotel.find({ rooms: { $elemMatch: { maxPeople: { $gt: maxPeople } } } }, function(err, hotels) {
+      if (err) return handleError(err);
+      console.log(hotels);
+    });
+
+    var b = await Hotel.find(
+      {}
+      )
+    return res.status(200).send({ xx: b });
   } catch (err) {
     next(err);
   }
