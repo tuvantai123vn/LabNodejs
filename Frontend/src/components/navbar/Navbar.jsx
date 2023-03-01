@@ -32,7 +32,6 @@ const Navbar = () => {
   }
   try {
     const user = jwtDecode(token);
-    console.log(user);
     return (
       <div className="navbar">
         <div className="navContainer">
