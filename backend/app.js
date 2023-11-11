@@ -28,7 +28,7 @@ const getProductsFromFile = (cb) => {
 app.get('/products', (req, res, next) => {
     getProductsFromFile( (products) => { 
         res.json(products);
-        console.log(products);
+        // console.log(products);
     });
     
  });
