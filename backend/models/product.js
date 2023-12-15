@@ -4,7 +4,7 @@ const fs = require('fs');
 const getProductsFromFile = cb => {
     const p = path.join(
         path.dirname(process.mainModule.filename), 
-        'data', 
+        'datas', 
         'products.json');
     fs.readFile(p, (err, fileContent) => {
         if(err){

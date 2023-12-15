@@ -1,34 +1,30 @@
-const Product = require("../models/product");
-
-exports.getAddProduct = (req, res, next) => {
-  res.render("add-product", {
-    pageTitle: "Add product",
-    path: "/admin/add-product",
-    formCSS: true,
-    productsCSS: true,
-  });
-};
+const Product = require("../models/Product");
 
 exports.postAddProduct = (req, res, next) => {
-  const title = new Product(req.body.title);
-  const imageUrl = new Product(req.body.imageUrl);
-  const description = new Product(req.body.description);
-  const price = new Product(req.body.price);
+  const title = req.body.title;
+  const imageUrl = req.body.imageUrl;
+  const description = req.body.description;
+  const price = req.body.price;
+  const productId = req.body.productId;
+
   try {
-    const product = {
-      title,
-      imageUrl,
-      description,
-      price,
-    };
+    const product = new Product(title, imageUrl, description, price, productId);
     console.log(product);
     product.save();
-    res.send("add-product succesful");
+    res.send("add-product successful");
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
 };
 
 exports.getProduct = (req, res, next) => {
-  res.json([]);
+  Product.fetchAll((products, err) => {
+    if (err) {
+      console.error('Error fetching products:', err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.send(products);
+    }
+  });
 };
