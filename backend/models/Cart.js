@@ -26,7 +26,7 @@ class Cart {
         });
     }
 
-    getCartFromFile(cb) {
+    static getCartFromFile(cb) {
         const cartPath = path.join(
             path.dirname(process.mainModule.filename),
             'datas',

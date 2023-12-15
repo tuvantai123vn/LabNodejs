@@ -15,3 +15,13 @@ exports.addToCart = async (req, res) => {
         }
     });
 };
+exports.getCart = (req, res, next) => {
+    Cart.getCartFromFile((cart, err) => {
+      if (err) {
+        console.error("Error fetching products:", err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.send(cart);
+      }
+    });
+  };
