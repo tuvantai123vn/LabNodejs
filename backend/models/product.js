@@ -24,6 +24,8 @@ module.exports = class Product {
     this.price = price;
   }
 
+  
+
   save() {
     // Lấy đường dẫn tới file
     const p = path.join(
