@@ -26,8 +26,10 @@ const getProductsFromFile = (cb) => {
 }
 const products = require('./router/product')
 const carts = require('./router/cart')
+const admin = require('./router/admin')
 app.use('/', products);
 app.use('/cart', carts);
+app.use('/admin', admin);
 
 // app.get('/products', (req, res, next) => {
 //     getProductsFromFile( (products) => { 

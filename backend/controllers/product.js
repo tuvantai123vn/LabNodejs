@@ -21,10 +21,24 @@ exports.postAddProduct = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   Product.fetchAll((products, err) => {
     if (err) {
-      console.error('Error fetching products:', err);
+      console.error("Error fetching products:", err);
       res.status(500).send("Internal Server Error");
     } else {
       res.send(products);
     }
+  });
+};
+exports.getProductByTitle = (req, res) => {
+  const title = req.params.title.replace(/-/g, ' ');
+
+  // Fetch the product from the database based on the title
+  Product.findOneByTitle(title, (product) => {
+    // Check if the product exists
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // If the product exists, send it as a response
+    res.json(product);
   });
 };
