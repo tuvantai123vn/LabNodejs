@@ -35,8 +35,20 @@ const getProductById = async (req, res, next) => {
 
 const getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
-    res.json(products);
+    const search = req.query.search;
+    if (search) {
+      const products = await Product.findAll({
+        where: {
+          title: {
+            [Sequelize.Op.like]: `%${search}%`,
+          },
+        },
+      });
+      res.json(products);
+    } else {
+      const products = await Product.findAll();
+      res.json(products);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
