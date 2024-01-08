@@ -4,14 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const Sequelize = require("sequelize");
 const { db } = require("./util/connectData");
 app.use(cors());
-
-// const sequelize = new Sequelize('shopDev', 'root', 'Mysql123@', {
-//   dialect: 'mysql',
-//   host: 'localhost'
-// });
 
 app.use(bodyParser.urlencoded({ extended: false }));
 

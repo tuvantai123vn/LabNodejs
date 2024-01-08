@@ -1,44 +1,68 @@
 const Product = require("../models/Product");
 
-exports.postAddProduct = (req, res, next) => {
-  const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
-  const description = req.body.description;
-  const price = req.body.price;
-  const productId = req.body.productId;
-
+const createProduct = async (req, res, next) => {
   try {
-    const product = new Product(title, imageUrl, description, price, productId);
-    console.log(product);
-    product.save();
-    res.send("add-product successful");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    const { title, imageUrl, price } = req.body;
+
+    const newProduct = await Product.create({
+      title,
+      imageUrl,
+      price,
+    });
+
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-exports.getProduct = (req, res, next) => {
-  Product.fetchAll((products, err) => {
-    if (err) {
-      console.error("Error fetching products:", err);
-      res.status(500).send("Internal Server Error");
-    } else {
-      res.send(products);
-    }
-  });
-};
-exports.getProductByTitle = (req, res) => {
-  const title = req.params.title.replace(/-/g, ' ');
+const getProductById = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findByPk(productId);
 
-  // Fetch the product from the database based on the title
-  Product.findOneByTitle(title, (product) => {
-    // Check if the product exists
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ error: "Product not found" });
     }
 
-    // If the product exists, send it as a response
     res.json(product);
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getAllProducts = async (req, res, next) => {
+  try {
+    const products = await Product.findAll();
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const deleteProductById = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findByPk(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    await product.destroy();
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  createProduct,
+  getProductById,
+  getAllProducts,
+  deleteProductById,
 };
