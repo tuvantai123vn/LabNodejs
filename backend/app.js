@@ -4,60 +4,37 @@ const fs = require('fs');
 const path = require("path");
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const Sequelize = require('sequelize');
+const {db} = require('./util/connectData');
 app.use(cors());
+
+
+// const sequelize = new Sequelize('shopDev', 'root', 'Mysql123@', {
+//   dialect: 'mysql',
+//   host: 'localhost'
+// });
+
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json());
 
-const getProductsFromFile = (cb) => {
-    const p = path.join(
-        path.dirname(process.mainModule.filename), 
-        'datas', 
-        'products.json');
-    fs.readFile(p, (err, fileContent) => {
-        if(err){
-         return cb([]);
-        }else{
-            cb(JSON.parse(fileContent));
-        } 
-    })
-}
 const products = require('./router/product')
 const carts = require('./router/cart')
 const admin = require('./router/admin')
-app.use('/', products);
+app.get('/', async (req, res, next) => {
+  try {
+      const result = await db.execute('SELECT * FROM products');
+      res.json(result[0]);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.use('/cart', carts);
 app.use('/admin', admin);
 
-// app.get('/products', (req, res, next) => {
-//     getProductsFromFile( (products) => { 
-//         res.json(products);
-//         // console.log(products);
-//     });
-    
-//  });
-
-// app.post('/add-products', (req, res, next) => {    
-//     getProductsFromFile( (products) => { 
-//         let newProduct = {
-//             title: req.body.title,
-//             imageUrl: req.body.imageUrl,
-//             description: req.body.description,
-//             price: req.body.price,
-//         };
-//         let list = [...products, newProduct];
-//         console.log(list);
-//         fs.writeFile(
-//             path.join(
-//                 path.dirname(process.mainModule.filename), 
-//                 'datas', 
-//                 'products.json'), JSON.stringify(list) , 'utf8' , () => {
-//             res.json(list);
-//         })
-//     });
-// });
  
 
 app.listen(4000);
