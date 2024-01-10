@@ -49,6 +49,7 @@ function Admin() {
       console.error("Error deleting product:", error);
     }
   };
+  
 
   const handleCancelDelete = () => {
       setSelectedProductId(null);
