@@ -1,36 +1,66 @@
 const Cart = require("../models/Cart");
 
-exports.addToCart = async (req, res) => {
+const addToCart = async (req, res) => {
   const { product_id, productPrice } = req.body;
 
-  // Using the instance to call the addProduct method
-  Cart.addProduct(product_id, 1, productPrice, (success) => {
-    if (success) {
-      res.status(200).json({ message: "Sản phẩm đã được thêm vào giỏ hàng." });
-    } else {
-      res.status(500).json({ message: "Lỗi khi thêm sản phẩm vào giỏ hàng." });
-    }
-  });
-};
-exports.getCart = (req, res, next) => {
-  Cart.getCartFromFile((cart, err) => {
-    if (err) {
-      console.error("Error fetching products:", err);
-      res.status(500).send("Internal Server Error");
-    } else {
-      res.send(cart);
-    }
-  });
+  try {
+    // Tạo mới giỏ hàng nếu chưa tồn tại
+    const cart = await Cart.findOrCreate({
+      where: { id: 1 }, // Chọn một ID tùy ý, có thể là ID duy nhất cho giỏ hàng
+      defaults: {
+        products: JSON.stringify([
+          { id: product_id, qty: 1, price: productPrice },
+        ]),
+        totalPrice: productPrice,
+      },
+    });
+
+    res.status(200).json({ message: "Sản phẩm đã được thêm vào giỏ hàng." });
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    res.status(500).json({ message: "Lỗi khi thêm sản phẩm vào giỏ hàng." });
+  }
 };
 
-exports.removeFromCart = (req, res) => {
-  const { productId } = req.params;
-//   Gọi phương thức removeProduct từ Cart
-  Cart.removeProduct(productId, (success) => {
-    if (success) {
-      res.status(200).json({ message: "Sản phẩm đã được xóa khỏi giỏ hàng." });
-    } else {
-      res.status(500).json({ message: "Lỗi khi xóa sản phẩm khỏi giỏ hàng." });
+const getCart = async (req, res, next) => {
+  try {
+    const cart = await Cart.findByPk(1); // Sử dụng ID tùy ý đã chọn ở bước trước
+
+    if (!cart) {
+      return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
     }
-  });
+
+    res.json(cart);
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ message: "Lỗi khi lấy thông tin giỏ hàng." });
+  }
+};
+const removeFromCart = async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    // Lấy thông tin giỏ hàng
+    const cart = await Cart.findByPk(1); // Sử dụng ID tùy ý đã chọn ở bước thêm giỏ hàng
+
+    if (!cart) {
+      return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
+    }
+
+    // Cập nhật giỏ hàng sau khi xóa sản phẩm
+    const updatedCart = await cart.update({
+      products: cart.products.filter((product) => product.id !== productId),
+    });
+
+    res.status(200).json({ message: "Sản phẩm đã được xóa khỏi giỏ hàng." });
+  } catch (error) {
+    console.error("Error removing product from cart:", error);
+    res.status(500).json({ message: "Lỗi khi xóa sản phẩm khỏi giỏ hàng." });
+  }
+};
+
+module.exports = {
+  addToCart,
+  getCart,
+  removeFromCart,
 };
