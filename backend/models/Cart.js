@@ -1,38 +1,20 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../util/connectData");
+const mongoose = require("mongoose");
 
-const Cart = sequelize.define(
-  "cart",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    products: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    totalPrice: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
+const DOCUMENT_NAME = "Cart";
+const COLLECTION_NAME = "Carts";
+
+const cartSchema = new mongoose.Schema({
+  products: {
+    type: Array,
+    required: true,
   },
-  {
-    tableName: "carts",
-    timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
-  }
-);
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
+}, {
+  timestamps: true,
+  collection: COLLECTION_NAME
+});
 
-sequelize
-  .sync() // Thêm option force để xóa bảng nếu tồn tại
-  .then(() => {
-    console.log("Carts table created successfully!");
-  })
-  .catch((error) => {
-    console.error("Unable to create table:", error);
-  });
-
-module.exports = Cart;
+module.exports = mongoose.model(DOCUMENT_NAME, cartSchema);

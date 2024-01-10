@@ -1,24 +1,37 @@
 const Cart = require("../models/Cart");
 
 const addToCart = async (req, res) => {
-  const { product_id, productPrice } = req.body;
+  const { product_id, title, price, qty } = req.body;
+  console.log(req.body);
 
   try {
-    // Tạo mới giỏ hàng nếu chưa tồn tại
-    const cart = await Cart.findOrCreate({
-      where: { id: 1 }, // Chọn một ID tùy ý, có thể là ID duy nhất cho giỏ hàng
-      defaults: {
-        products: JSON.stringify([
-          { id: product_id, qty: 1, price: productPrice },
-        ]),
-        totalPrice: productPrice,
-      },
-    });
+    let cart = await Cart.findOne();
 
-    res.status(200).json({ message: "Sản phẩm đã được thêm vào giỏ hàng." });
+    if (!cart) {
+      cart = await Cart.create({
+        products: [{ id: product_id, title, price, qty }],
+        totalPrice: price * qty,
+      });
+    } else {
+      const existingProductIndex = cart.products.findIndex((product) => product.id === product_id);
+
+      if (existingProductIndex !== -1) {
+        cart.products[existingProductIndex].qty += qty;
+      } else {
+        cart.products.push({ id: product_id, title, price, qty });
+      }
+
+      cart.totalPrice = cart.products.reduce((total, product) => {
+        return total + product.price * product.qty;
+      }, 0);
+
+      await cart.save();
+    }
+
+    res.status(200).json({ message: "Product added to the cart successfully." });
   } catch (error) {
     console.error("Error adding product to cart:", error);
-    res.status(500).json({ message: "Lỗi khi thêm sản phẩm vào giỏ hàng." });
+    res.status(500).json({ message: "Failed to add product to the cart." });
   }
 };
 
