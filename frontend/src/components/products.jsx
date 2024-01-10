@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import DetailProduct from "./DetailProduct";
 
 function useCart() {
   const [cart, setCart] = useState([]);
 
-  const addToCart = async (productId, productPrice, qty) => {
+  const addToCart = async (productId, title ,productPrice, qty) => {
     const updatedCart = [...cart];
     const existingProduct = updatedCart.find((item) => item.id === productId);
 
@@ -15,14 +14,16 @@ function useCart() {
     } else {
       updatedCart.push({
         id: productId,
+        title,
         qty: parseInt(qty, 10),
         price: parseFloat(productPrice),
       });
     }
 
     try {
-      await axios.post("http://localhost:4000/cart/add-cart", {
+      await axios.post("http://localhost:4000/carts/add-cart", {
         product_id: productId,
+        title,
         quantity: 1,
         productPrice: parseFloat(productPrice),
       });
@@ -82,13 +83,13 @@ function RenderShop() {
               <div className="card__actions">
                 <button
                   className="btn"
-                  onClick={() => handleProductDetail(product.id)}
+                  onClick={() => handleProductDetail(product._id)}
                 >
                   Detail
                 </button>
                 <button
                   className="btn"
-                  onClick={() => addToCart(product.title, product.price)}
+                  onClick={() => addToCart(product.id, product.title, product.price, 1)}
                 >
                   Add to Cart
                 </button>

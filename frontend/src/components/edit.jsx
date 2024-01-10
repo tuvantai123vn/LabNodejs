@@ -48,7 +48,7 @@ const EditProduct = () => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:4000/products/${id}`,
+        `http://localhost:4000/admin/${id}`,
         updatedProduct
       );
       const updatedProductData = response.data;

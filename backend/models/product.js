@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
-  collation: COLLECTION_NAME
+  collection: COLLECTION_NAME
 });
 
 module.exports = mongoose.model(DOCUMENT_NAME, productSchema);

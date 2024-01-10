@@ -1,3 +1,4 @@
+// Cart.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -7,9 +8,10 @@ const Cart = () => {
   useEffect(() => {
     // Gọi API để lấy dữ liệu giỏ hàng từ máy chủ Node.js
     axios
-      .get("http://localhost:4000/cart/getcart")
+      .get("http://localhost:4000/carts/getcart")
       .then((response) => {
         const cartData = response.data;
+        console.log(cartData)
         setCart(cartData.products);
       })
       .catch((error) => console.error("Error:", error));
@@ -17,7 +19,7 @@ const Cart = () => {
 
   const handleRemoveFromCart = (productId) => {
     axios
-      .delete(`http://localhost:4000/cart/remove-cart/${productId}`)
+      .delete(`http://localhost:4000/carts/remove-cart/${productId}`)
       .then((response) => {
         const updatedCart = cart.filter((item) => item.id !== productId);
         setCart(updatedCart);

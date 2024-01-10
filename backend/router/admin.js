@@ -2,10 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const productsController = require('../controllers/admin')
+const adminController = require('../controllers/admin')
 
 // router.get("/cart", productsController.getProduct);
-router.patch("/edit-product/:productTitle", productsController.editProduct);
+router.patch("/:id", adminController.postEditProduct);
+router.delete("/:id", adminController.deleteProductById);
 
 
 

@@ -37,7 +37,7 @@ function Admin() {
   const handleConfirmDelete = async () => {
     try {
       // Perform delete operation
-      await axios.delete(`http://localhost:4000/products/${selectedProductId}`);
+      await axios.delete(`http://localhost:4000/admin/${selectedProductId}`);
 
       // Refetch products after deletion
       const response = await axios.get("http://localhost:4000/products");
@@ -49,7 +49,7 @@ function Admin() {
       console.error("Error deleting product:", error);
     }
   };
-  
+
 
   const handleCancelDelete = () => {
       setSelectedProductId(null);
@@ -81,13 +81,13 @@ function Admin() {
               <div className="card__actions">
                 <button
                   className="btn"
-                  onClick={() => handleProductDetail(product.id)}
+                  onClick={() => handleProductDetail(product._id)}
                 >
                   Detail
                 </button>
                 <button
                   className="btn"
-                  onClick={() => handleEditCart(product.id)}
+                  onClick={() => handleEditCart(product._id)}
                 >
                   Edit Cart
                 </button>
@@ -95,7 +95,7 @@ function Admin() {
                   className="btn btn-primary" // Use Bootstrap class for styling
                   data-toggle="modal"
                   data-target="#exampleModalCenter"
-                  onClick={() => handleDeleteProduct(product.id)}
+                  onClick={() => handleDeleteProduct(product._id)}
                 >
                   Delete
                 </button>
