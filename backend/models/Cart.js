@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { FLOAT } = require("sequelize");
 
 const DOCUMENT_NAME = "Cart";
 const COLLECTION_NAME = "Carts";
@@ -12,6 +13,7 @@ const cartSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        price: { type: Number, required: true },
         quantity: { type: Number, required: true },
       },
     ],

@@ -15,10 +15,12 @@ require("./dbs/init.mongodb")
 const products = require("./router/product");
 const carts = require("./router/cart");
 const admin = require("./router/admin");
+const user = require("./router/user");
 
 
 app.use("/products", products);
 app.use("/carts", carts);
 app.use("/admin", admin);
+app.use("/user", user);
 
 app.listen(4000);
