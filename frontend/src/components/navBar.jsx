@@ -36,6 +36,14 @@ function Header() {
               Admin
             </a>
           </li>
+          <li className="main-header__item">
+            <a
+              className={location.pathname === "/order" ? "active" : ""}
+              href="/order"
+            >
+              Order
+            </a>
+          </li>
         </ul>
       </nav>
     </header>

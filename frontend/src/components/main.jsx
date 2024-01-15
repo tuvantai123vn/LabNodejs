@@ -7,6 +7,7 @@ import EditProduct from "./edit";
 import Cart from "./cart";
 import DetailProduct from "./DetailProduct";
 import Admin from "./admin";
+import Orders from "./order";
 
 function Main() {
   return (
@@ -19,6 +20,7 @@ function Main() {
         <Route path="/edit-product/:id" element={<EditProduct />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/order" element={<Orders />} />
       </Routes>
     </div>
   );

@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 
-const DOCUMENT_NAME = "Oder";
-const COLLECTION_NAME = "Oders";
+const DOCUMENT_NAME = "Order";
+const COLLECTION_NAME = "Orders";
 
 const orderSchema = new mongoose.Schema(
   {
     product: [
       {
-        product: { type: Object, required: true },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
         quantity: { type: Number, required: true },
       },
     ],
