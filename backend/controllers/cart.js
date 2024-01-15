@@ -4,7 +4,6 @@ const addToCart = async (req, res) => {
   const product_id = req.body.product_id;
   const price = parseFloat(req.body.productPrice);
   const qty = parseFloat(req.body.quantity);
-  console.log(req.body)
 
   try {
       // Kiểm tra giỏ hàng có tồn tại không
