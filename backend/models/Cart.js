@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { FLOAT } = require("sequelize");
 
 const DOCUMENT_NAME = "Cart";
 const COLLECTION_NAME = "Carts";

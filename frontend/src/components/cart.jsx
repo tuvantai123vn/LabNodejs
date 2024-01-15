@@ -1,67 +1,85 @@
-// Cart.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Gọi API để lấy dữ liệu giỏ hàng từ máy chủ Node.js
     axios
       .get("http://localhost:4000/carts/getcart")
       .then((response) => {
-        const cartData = response.data;
-        console.log(cartData)
-        setCart(cartData.products);
+        setCart(response.data);
+        
       })
       .catch((error) => console.error("Error:", error));
   }, []);
+
+  const handleCheckout = async () => {
+    try {
+      await axios.post("http://localhost:4000/order/checkout");
+      // Optionally, you can redirect the user or show a success message
+      console.log("Đặt hàng thành công!");
+      navigate("/");
+    } catch (error) {
+      console.error("Lỗi khi thực hiện thanh toán:", error);
+    }
+  };
 
   const handleRemoveFromCart = (productId) => {
     axios
       .delete(`http://localhost:4000/carts/remove-cart/${productId}`)
       .then((response) => {
-        const updatedCart = cart.filter((item) => item.id !== productId);
+        const updatedCart = cart.filter((item) => item._id !== productId);
         setCart(updatedCart);
       })
       .catch((error) => console.error("Error removing from cart:", error));
   };
 
-  const groupedProducts = Array.from(
-    { length: Math.ceil(cart.length / 4) },
-    (_, index) => cart.slice(index * 4, (index + 1) * 4)
-  );
-
   return (
     <div>
-      {groupedProducts.map((row, rowIndex) => (
-        <div key={rowIndex} className="grid">
-          {row.map((item) => (
-            <div key={item.id} className="card product-item">
+      <div className="grid">
+        {cart.map((item) =>
+          item.products.map((product) => (
+            <div key={product._id} className="card product-item">
               <header className="card__header">
-                <h1 className="product__title">Title: {item.id}</h1>
+                <h1 className="product__title">
+                  Title: {product.product?.title}
+                </h1>
               </header>
+              <div className="card__image">
+                <img
+                  src={product.product?.imageUrl}
+                  alt={product.product?.title}
+                />
+              </div>
               <div className="card__content">
-                <p className="product__description">Quantity: {item.qty}</p>
-                <p className="product__description">Price: {item.price}</p>
+                <p className="product__description">
+                  Quantity: {product.quantity}
+                </p>
+                <p className="product__description">Price: {product.price}</p>
               </div>
               <div className="card__actions">
                 <button
                   className="btn"
-                  onClick={() => handleRemoveFromCart(item.id)}
+                  onClick={() => handleRemoveFromCart(product._id)}
                 >
                   Delete
                 </button>
               </div>
             </div>
-          ))}
-        </div>
-      ))}
+          ))
+        )}
+      </div>
       <header className="card__header">
         <h1 className="product__title">
-          Total Price: $
-          {cart.reduce((total, item) => total + item.qty * item.price, 0)}
+          Total Price: ${cart.map((item) => item.totalPrice)}
+          <button className="btn" onClick={handleCheckout}>
+        Checkout
+      </button>
         </h1>
+        
       </header>
     </div>
   );

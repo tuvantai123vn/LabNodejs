@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function useCart() {
   const [cart, setCart] = useState([]);
 
-  const addToCart = async (productId, title ,productPrice, qty) => {
+  const addToCart = async (productId, productPrice, qty) => {
     const updatedCart = [...cart];
     const existingProduct = updatedCart.find((item) => item.id === productId);
 
@@ -14,8 +14,7 @@ function useCart() {
     } else {
       updatedCart.push({
         id: productId,
-        title,
-        qty: parseInt(qty, 10),
+        quantity: qty,
         price: parseFloat(productPrice),
       });
     }
@@ -23,8 +22,7 @@ function useCart() {
     try {
       await axios.post("http://localhost:4000/carts/add-cart", {
         product_id: productId,
-        title,
-        quantity: 1,
+        quantity: qty,
         productPrice: parseFloat(productPrice),
       });
       setCart(updatedCart);
@@ -89,7 +87,9 @@ function RenderShop() {
                 </button>
                 <button
                   className="btn"
-                  onClick={() => addToCart(product.id, product.title, product.price, 1)}
+                  onClick={() =>
+                    addToCart(product._id, product.price, 1)
+                  }
                 >
                   Add to Cart
                 </button>

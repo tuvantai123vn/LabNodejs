@@ -16,11 +16,13 @@ const products = require("./router/product");
 const carts = require("./router/cart");
 const admin = require("./router/admin");
 const user = require("./router/user");
+const order = require("./router/order");
 
 
 app.use("/products", products);
 app.use("/carts", carts);
 app.use("/admin", admin);
 app.use("/user", user);
+app.use("/order", order);
 
 app.listen(4000);
