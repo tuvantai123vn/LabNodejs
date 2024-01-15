@@ -1,37 +1,28 @@
 const Cart = require("../models/Cart");
 
 const addToCart = async (req, res) => {
-  const { product_id, title, price, qty } = req.body;
-  console.log(req.body);
+  const { product_id, price, qty } = req.body;
 
   try {
-    let cart = await Cart.findOne();
+      let cart = await Cart.findOneAndUpdate(
+          {},
+          {
+              $push: {
+                  products: {
+                      product: product_id,
+                      price: price,
+                      qty: qty
+                  }
+              },
+              $inc: { totalPrice: price * qty }
+          },
+          { upsert: true, new: true }
+      );
 
-    if (!cart) {
-      cart = await Cart.create({
-        products: [{ id: product_id, title, price, qty }],
-        totalPrice: price * qty,
-      });
-    } else {
-      const existingProductIndex = cart.products.findIndex((product) => product.id === product_id);
-
-      if (existingProductIndex !== -1) {
-        cart.products[existingProductIndex].qty += qty;
-      } else {
-        cart.products.push({ id: product_id, title, price, qty });
-      }
-
-      cart.totalPrice = cart.products.reduce((total, product) => {
-        return total + product.price * product.qty;
-      }, 0);
-
-      await cart.save();
-    }
-
-    res.status(200).json({ message: "Product added to the cart successfully." });
+      res.status(200).json({ message: "Product added to the cart successfully." });
   } catch (error) {
-    console.error("Error adding product to cart:", error);
-    res.status(500).json({ message: "Failed to add product to the cart." });
+      console.error("Error adding product to cart:", error);
+      res.status(500).json({ message: "Failed to add product to the cart." });
   }
 };
 

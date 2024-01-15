@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const DOCUMENT_NAME = "Product";
 const COLLECTION_NAME = "Products";
 
