@@ -13,7 +13,6 @@ const Orders = () => {
       })
       .catch((error) => console.error("Error fetching orders:", error));
   }, []);
-  console.log(orders);
 
   return (
     <div>
@@ -33,6 +32,15 @@ const Orders = () => {
                 </li>
               ))}
             </ul>
+            {/* Tính tổng giá của đơn hàng và hiển thị */}
+            <p>
+              Total Price: $
+              {order.products.reduce(
+                (total, product) =>
+                  total + product.quantity * product.product.price,
+                0
+              )}
+            </p>
           </li>
         ))}
       </ul>

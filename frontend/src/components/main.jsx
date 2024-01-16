@@ -8,6 +8,8 @@ import Cart from "./cart";
 import DetailProduct from "./DetailProduct";
 import Admin from "./admin";
 import Orders from "./order";
+import Login from "./login";
+import Signup from "./signup";
 
 function Main() {
   return (
@@ -21,6 +23,8 @@ function Main() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/order" element={<Orders />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </div>
   );
