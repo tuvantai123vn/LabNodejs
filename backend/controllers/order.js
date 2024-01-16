@@ -1,6 +1,6 @@
 // controllers/cart.js
-const Cart = require('../models/Cart');
-const Order = require('../models/order');
+const Cart = require("../models/Cart");
+const Order = require("../models/order");
 
 const checkout = async (req, res) => {
   try {
@@ -10,14 +10,14 @@ const checkout = async (req, res) => {
       return res.status(404).json({ message: "Giỏ hàng không có sản phẩm." });
     }
 
-    // Assuming you have user information available in req.user
+    // Thay đổi phần này để truyền đúng thông tin user từ req.user
     // const { name, userId } = req.user;
 
     const order = new Order({
-      product: cart.products,
+      products: cart.products, // Điều chỉnh thành 'products' thay vì 'product'
       user: {
-        name: "tu1",
-        userId: "65a5016870ffc2f6eecd78b4",
+        name: 'tu1', // Sử dụng thông tin user từ req.user
+        userId: '65a5016870ffc2f6eecd78b4',
       },
     });
 
@@ -33,23 +33,25 @@ const checkout = async (req, res) => {
   }
 };
 
+
 const getOrders = async (req, res) => {
-    try {
-      const orders = await Order.find()
-  
-      if (!orders) {
-        return res.status(404).json({ message: 'No orders found.' });
-      }
-  
-      res.json(orders);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-      res.status(500).json({ message: 'Error fetching orders.' });
+  try {
+    const orders = await Order.find()
+      .populate("products.product")
+      .populate("user");
+
+    if (!orders) {
+      return res.status(404).json({ message: "No orders found." });
     }
-  };
-  
+
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: "Error fetching orders." });
+  }
+};
 
 module.exports = {
   checkout,
-  getOrders
+  getOrders,
 };

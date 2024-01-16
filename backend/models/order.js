@@ -5,7 +5,7 @@ const COLLECTION_NAME = "Orders";
 
 const orderSchema = new mongoose.Schema(
   {
-    product: [
+    products: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema(
       },
       userId: {
         type: mongoose.Schema.Types.ObjectId,
-        requided: true,
+        required: true,
         ref: "User",
       },
     },

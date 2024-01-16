@@ -24,12 +24,12 @@ const Orders = () => {
             <h3>Order ID: {order._id}</h3>
             <p>User: {order.user.name}</p>
             <ul>
-              {order.product.map((product) => (
+              {order.products.map((product) => (
                 <li key={product._id}>
                   <p>Title: {product.product?.title}</p>
                   <p>Quantity: {product.quantity}</p>
                   {/* Assuming 'price' is part of the product data */}
-                  <p>Price: ${product.price}</p>
+                  <p>Price: ${product.product.price}</p>
                 </li>
               ))}
             </ul>
