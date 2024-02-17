@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
+const { ReasonPhrases, StatusCodes } = require("http-status-codes");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -12,7 +13,10 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error("Error fetching products:", err);
+      const error = new Error(err.message || "Failed to fetch products");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
     });
 };
 
@@ -20,13 +24,23 @@ exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findById(prodId)
     .then(product => {
+      if (!product) {
+        const error = new Error("Product not found");
+        error.httpStatusCode = StatusCodes.NOT_FOUND;
+        throw error;
+      }
       res.render('shop/product-detail', {
         product: product,
         pageTitle: product.title,
         path: '/products',
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error("Error fetching product:", err);
+      const error = new Error(err.message || "Failed to fetch product");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
+    });
 };
 
 exports.getIndex = (req, res, next) => {
@@ -39,7 +53,10 @@ exports.getIndex = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error("Error fetching index:", err);
+      const error = new Error(err.message || "Failed to fetch index");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
     });
 };
 
@@ -55,7 +72,12 @@ exports.getCart = (req, res, next) => {
         products: products,
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error("Error fetching cart:", err);
+      const error = new Error(err.message || "Failed to fetch cart");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
+    });
 };
 
 exports.postCart = (req, res, next) => {
@@ -67,6 +89,12 @@ exports.postCart = (req, res, next) => {
     .then(result => {
       console.log(result);
       res.redirect('/cart');
+    })
+    .catch(err => {
+      console.error("Error adding to cart:", err);
+      const error = new Error(err.message || "Failed to add to cart");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
     });
 };
 
@@ -77,7 +105,12 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .then(result => {
       res.redirect('/cart');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error("Error removing from cart:", err);
+      const error = new Error(err.message || "Failed to remove from cart");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
+    });
 };
 
 exports.postOrder = (req, res, next) => {
@@ -103,7 +136,12 @@ exports.postOrder = (req, res, next) => {
     .then(() => {
       res.redirect('/orders');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error("Error placing order:", err);
+      const error = new Error(err.message || "Failed to place order");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
+    });
 };
 
 exports.getOrders = (req, res, next) => {
@@ -115,5 +153,10 @@ exports.getOrders = (req, res, next) => {
         orders: orders,
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error("Error fetching orders:", err);
+      const error = new Error(err.message || "Failed to fetch orders");
+      error.httpStatusCode = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
+      return next(error);
+    });
 };

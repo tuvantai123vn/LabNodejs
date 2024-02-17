@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 const { validationResult } = require('express-validator/check');
+const { ReasonPhrases, StatusCodes } = require("http-status-codes");
 
 const User = require('../models/user');
 
@@ -61,7 +62,7 @@ exports.postLogin = (req, res, next) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).render('auth/login', {
+    return res.status(StatusCodes.UNPROCESSABLE_ENTITY).render('auth/login', {
       path: '/login',
       pageTitle: 'Login',
       errorMessage: errors.array()[0].msg,
@@ -76,7 +77,7 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then(user => {
       if (!user) {
-        return res.status(422).render('auth/login', {
+        return res.status(StatusCodes.UNPROCESSABLE_ENTITY).render('auth/login', {
           path: '/login',
           pageTitle: 'Login',
           errorMessage: 'Invalid email or password.',
@@ -98,7 +99,7 @@ exports.postLogin = (req, res, next) => {
               res.redirect('/');
             });
           }
-          return res.status(422).render('auth/login', {
+          return res.status(StatusCodes.UNPROCESSABLE_ENTITY).render('auth/login', {
             path: '/login',
             pageTitle: 'Login',
             errorMessage: 'Invalid email or password.',
