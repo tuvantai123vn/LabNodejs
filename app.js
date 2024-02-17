@@ -11,6 +11,7 @@ const flash = require('connect-flash');
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
+
 const MONGODB_URI =
 "mongodb+srv://admin:admin@node-products.o0dvpt9.mongodb.net/shop";
 
@@ -66,7 +67,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(MONGODB_URI)
   .then(result => {
     app.listen(3000);
   })
