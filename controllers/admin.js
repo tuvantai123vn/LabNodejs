@@ -82,7 +82,9 @@ exports.getEditProduct = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send("Internal Server Error");
     });
 };
 
@@ -96,21 +98,23 @@ exports.postEditProduct = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(StatusCodes.UNPROCESSABLE_ENTITY).render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editing: true,
-      hasError: true,
-      product: {
-        title: updatedTitle,
-        imageUrl: updatedImageUrl,
-        price: updatedPrice,
-        description: updatedDesc,
-        _id: prodId,
-      },
-      errorMessage: errors.array()[0].msg,
-      validationErrors: errors.array(),
-    });
+    return res
+      .status(StatusCodes.UNPROCESSABLE_ENTITY)
+      .render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: true,
+        hasError: true,
+        product: {
+          title: updatedTitle,
+          imageUrl: updatedImageUrl,
+          price: updatedPrice,
+          description: updatedDesc,
+          _id: prodId,
+        },
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array(),
+      });
   }
 
   Product.findById(prodId)
@@ -129,7 +133,9 @@ exports.postEditProduct = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send("Internal Server Error");
     });
 };
 
@@ -145,7 +151,9 @@ exports.getProducts = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send("Internal Server Error");
     });
 };
 
@@ -154,10 +162,19 @@ exports.postDeleteProduct = (req, res, next) => {
   Product.deleteOne({ _id: prodId, userId: req.user._id })
     .then(() => {
       console.log("DESTROYED PRODUCT");
-      res.redirect("/admin/products");
+      // Xóa sản phẩm khỏi DOM ngay lập tức
+      const productElement = document.getElementById(prodId);
+      if (productElement) {
+        productElement.parentNode.removeChild(productElement);
+      }
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Product deleted successfully" });
     })
     .catch((err) => {
       console.error(err);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal Server Error" });
     });
 };
